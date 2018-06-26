@@ -14,11 +14,16 @@ def days_in_month(year, month):
       year  - an integer between datetime.MINYEAR and datetime.MAXYEAR
               representing the year
       month - an integer between 1 and 12 representing the month
-
     Returns:
       The number of days in the input month.
     """
-    return 0
+    given_month = datetime.date(year,month,1)
+    if given_month.month <=11:
+        difference = datetime.date(year,month+1,1) -given_month
+        return difference.days
+    elif given_month.month==12:
+        difference_2 = datetime.date(year+1,1,1) -given_month
+        return difference_2.days
 
 def is_valid_date(year, month, day):
     """
@@ -31,7 +36,11 @@ def is_valid_date(year, month, day):
       True if year-month-day is a valid date and
       False otherwise
     """
-    return False
+    if year in range (datetime.MINYEAR,datetime.MAXYEAR) and \
+    month in range (1,13) and day in range(1, days_in_month(year,month)+1):
+        return True
+    else:
+        return False
 
 def days_between(year1, month1, day1, year2, month2, day2):
     """
@@ -48,7 +57,13 @@ def days_between(year1, month1, day1, year2, month2, day2):
       Returns 0 if either date is invalid or the second date is
       before the first date.
     """
-    return 0
+    if is_valid_date (year1,month1,day1) and \
+    is_valid_date (year2,month2,day2) is True and \
+    datetime.date(year2,month2,day2)>datetime.date(year1,month1,day1):
+        days_btw = datetime.date(year2,month2,day2) - datetime.date(year1,month1,day1)
+        return days_btw.days
+    else:
+        return 0
 
 def age_in_days(year, month, day):
     """
@@ -62,4 +77,10 @@ def age_in_days(year, month, day):
       Returns 0 if the input date is invalid or if the input
       date is in the future.
     """
-    return 0
+    if is_valid_date(year,month,day):
+        present = datetime.date.today()
+        birthday = datetime.date(year,month,day)
+        return days_between(birthday.year,birthday.month,
+        birthday.day,present.year,present.month,present.day)
+    else:
+        return 0
